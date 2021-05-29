@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
+import 'package:journal/auth/auth.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
-import 'dart:async';
 
 class MoodDetector {
   final _modelFile = 'journal.tflite';
@@ -11,16 +11,10 @@ class MoodDetector {
   final String start = '<START>';
   final String pad = '<PAD>';
   final String unk = '<UNKNOWN>';
-  final _userFile = 'usertext.txt';
 
   MoodDetector() {
     journalModel();
     journalDict();
-    loadAsset();
-  }
-
-  Future<String> loadAsset() async {
-    return await rootBundle.loadString('$_userFile');
   }
 
   List<List<double>> tokenizeInputText(String text) {
@@ -62,7 +56,6 @@ class MoodDetector {
       dict[entry[0]] = int.parse(entry[1]);
     }
     _dict = dict;
-    // garuna test case => remove later on
     if (_dict.isNotEmpty) {
       print(1);
     } else {
@@ -70,24 +63,25 @@ class MoodDetector {
     }
   }
 
-  int checkMood(String userData) {
-    List<List<double>> input = tokenizeInputText(userData);
+  int checkMood(String _text) {
+    List<List<double>> input = tokenizeInputText(_text);
     var output = List<double>.filled(2, 0).reshape([1, 2]);
     journalAnalyzer.run(input, output);
     //return [output[0][0], output[0][1]];
     final positive = output[0][0];
-    final negetive = output[0][1];
+    final negative = output[0][1];
+    print(positive);
+    print(negative);
     // happy=> 1, neutal => 0, sad => -1
-    if (positive > negetive) {
+    if (positive > negative) {
+      currentUser.coins += positive * 10;
       return 1;
     } else if (positive > 0.45 && positive < 0.55) {
+      currentUser.coins += positive * 10;
       return 0;
-    } else
+    } else {
+      currentUser.coins -= negative * 10;
       return -1;
-  }
-
-  double coinsGenerator(int counter) {
-    double coins = double.parse((counter * 3.14).toStringAsFixed(2));
-    return coins;
+    }
   }
 }

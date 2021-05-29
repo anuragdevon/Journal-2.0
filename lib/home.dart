@@ -38,13 +38,20 @@ class Sidebar extends StatelessWidget {
 class Journal extends StatefulWidget {
   final DateTime date;
   final String text;
+  final int mood;
 
-  Journal({Key? key, required this.date, required this.text}) : super(key: key);
+  Journal(
+      {Key? key, required this.date, required this.text, required this.mood})
+      : super(key: key);
 
   static Future<Journal> load(File journal) async {
     final String fileName = path.basename(journal.path).split('.').first;
     final DateTime date = DateTime.parse(fileName);
-    return Journal(date: date, text: await journal.readAsString());
+    return Journal(
+      date: date,
+      text: await journal.readAsString(),
+      mood: 0,
+    );
   }
 
   @override
