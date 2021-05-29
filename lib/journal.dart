@@ -3,16 +3,20 @@ import 'package:jiffy/jiffy.dart';
 import 'package:journal/main.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'analyzer/moodDetector.dart';
 import 'home.dart';
 
 class JournalInput extends StatefulWidget {
   static const String id = '/journalInput';
   late final String text;
   late final DateTime date;
+  late final int mood;
 
-  JournalInput({DateTime? date, String? text, Key? key}) : super(key: key) {
+  JournalInput({DateTime? date, int? mood, String? text, Key? key})
+      : super(key: key) {
     this.text = text == null ? '' : text;
     this.date = date == null ? DateTime.now() : date;
+    this.mood = mood == null ? 0 : mood;
   }
 
   @override
@@ -23,15 +27,19 @@ class _JournalInputState extends State<JournalInput> {
   String journalText = '';
 
   Future<bool> _backButtonPressed() async {
-    // TODO: handle list updation on pop
     final String journalId = Jiffy(widget.date).format('yyyyMMdd');
 
     final Directory directory = await getApplicationDocumentsDirectory();
     final path = directory.path;
     final file = File('$path/$journalId.txt');
     file.writeAsString('$journalText');
+    print("hello");
+    final model = MoodDetector();
+    final mood = model.checkMood(journalText);
+    print("bye");
     MyApp.journals.removeWhere((journal) => journal.date == widget.date);
-    MyApp.journals.add(Journal(date: widget.date, text: journalText));
+    MyApp.journals
+        .add(Journal(date: widget.date, text: journalText, mood: mood));
     return true;
   }
 
