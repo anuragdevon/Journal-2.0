@@ -1,55 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:journal/main.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
-class JournalInput extends StatefulWidget {
-  static String id = '/journalInput';
-  final String journalText;
+import 'home.dart';
 
-  const JournalInput({
-    this.journalText = "",
-    Key? key,
-  }) : super(key: key);
+class JournalInput extends StatefulWidget {
+  static const String id = '/journalInput';
+  late final String text;
+  late final DateTime date;
+
+  JournalInput({DateTime? date, String? text, Key? key}) : super(key: key) {
+    this.text = text == null ? '' : text;
+    this.date = date == null ? DateTime.now() : date;
+  }
 
   @override
   _JournalInputState createState() => _JournalInputState();
 }
 
 class _JournalInputState extends State<JournalInput> {
-  String journalText = "";
-  String journalId = Jiffy(DateTime.now()).format("yyyymmdd");
+  String journalText = '';
 
   Future<bool> _backButtonPressed() async {
-    final directory = await getApplicationDocumentsDirectory();
+    // TODO: handle list updation on pop
+    final String journalId = Jiffy(widget.date).format('yyyyMMdd');
+
+    final Directory directory = Platform.isLinux
+        ? Directory('/home/subaru/.cache/journals')
+        : await getApplicationDocumentsDirectory();
     final path = directory.path;
     final file = File('$path/$journalId.txt');
     file.writeAsString('$journalText');
+    MyApp.journals.removeWhere((journal) => journal.date == widget.date);
+    MyApp.journals.add(Journal(date: widget.date, text: journalText));
     return true;
   }
 
   @override
   Widget build(BuildContext context) {
-    final String formatted = Jiffy(DateTime.now()).format("dd MMMM yyyy");
-    final String formattedTime = Jiffy(DateTime.now()).jm;
-    journalText = this.widget.journalText;
+    final String formatted = Jiffy(widget.date).format('MMM dd, yyyy');
+    final String formattedTime = Jiffy(widget.date).jm;
+    journalText = widget.text;
 
     final dateBox = Container(
       child: Text(
         formatted,
-        style: Theme.of(context).textTheme.bodyText1!.copyWith(
-              fontSize: 20,
-              color: Colors.black54,
-            ),
+        style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 20),
       ),
     );
     final writeBox = Container(
       child: TextFormField(
         initialValue: journalText,
-        style: Theme.of(context).textTheme.bodyText1!.copyWith(
-              fontSize: 16,
-              color: Colors.black54,
-            ),
+        style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 16),
         keyboardType: TextInputType.multiline,
         maxLines: null,
         decoration: InputDecoration(
@@ -67,18 +71,13 @@ class _JournalInputState extends State<JournalInput> {
         alignment: Alignment.bottomCenter,
         child: Text(
           "Last Saved: $formattedTime",
-          style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                fontSize: 12,
-                color: Colors.black54,
-              ),
+          style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 12),
         ),
       ),
     );
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("A few handy buttons here"),
-      ),
+      appBar: AppBar(),
       body: WillPopScope(
         onWillPop: _backButtonPressed,
         child: Center(
@@ -100,7 +99,11 @@ class _JournalInputState extends State<JournalInput> {
 }
 
 class JournalInputArguments {
-  final String journalText;
+  late final String text;
+  late final DateTime date;
 
-  JournalInputArguments(this.journalText);
+  JournalInputArguments({DateTime? date, String? text}) {
+    this.text = text == null ? '' : text;
+    this.date = date == null ? DateTime.now() : date;
+  }
 }

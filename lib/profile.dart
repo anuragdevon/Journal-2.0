@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'chart.dart';
 
 class Profile extends StatelessWidget {
-  static String id = "/profile";
+  static const String id = "/profile";
   @override
   Widget build(BuildContext context) {
     final logo = Hero(
@@ -75,8 +74,6 @@ class Profile extends StatelessWidget {
       ),
     );
 
-    final graph = LineChartSample2();
-
     return Scaffold(
       appBar: AppBar(
         title: Text("A few handy buttons here"),
@@ -92,7 +89,6 @@ class Profile extends StatelessWidget {
               SizedBox(height: 24),
               points,
               SizedBox(height: 24),
-              graph,
             ],
           ),
         ),

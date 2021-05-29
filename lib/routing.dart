@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
-import 'journalinput.dart';
+import 'home.dart';
+import 'journal.dart';
 import 'profile.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    const String homeID = '/';
-    const String jouranlInputID = '/journalInput';
-    const String profileID = '/profile';
-
     switch (settings.name) {
-      case homeID:
+      case Home.id:
         return MaterialPageRoute(builder: (context) => Home());
-      case jouranlInputID:
+      case JournalInput.id:
         final args = settings.arguments as JournalInputArguments;
         return MaterialPageRoute(
-            builder: (context) => JournalInput(journalText: args.journalText));
-      case profileID:
+            builder: (context) => JournalInput(
+                  text: args.text,
+                  date: args.date,
+                ));
+      case Profile.id:
         return MaterialPageRoute(builder: (context) => Profile());
       default:
         return _errorRoute();
