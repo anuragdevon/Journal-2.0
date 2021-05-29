@@ -33,8 +33,9 @@ class _JournalInputState extends State<JournalInput> {
     final path = directory.path;
     final file = File('$path/$journalId.txt');
     file.writeAsString('$journalText');
+    print(journalText);
     print("hello");
-    final model = MoodDetector();
+    // final model = MoodDetector();
     final mood = model.checkMood(journalText);
     print("bye");
     MyApp.journals.removeWhere((journal) => journal.date == widget.date);

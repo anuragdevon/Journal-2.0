@@ -68,8 +68,10 @@ class MoodDetector {
     var output = List<double>.filled(2, 0).reshape([1, 2]);
     journalAnalyzer.run(input, output);
     //return [output[0][0], output[0][1]];
-    final positive = output[0][0];
-    final negative = output[0][1];
+    // final positive = output[0][0];
+    // final negative = output[0][1];
+    final positive = num.parse(output[0][0].toStringAsFixed(2));
+    final negative = num.parse(output[0][1].toStringAsFixed(2));
     print(positive);
     print(negative);
     // happy=> 1, neutal => 0, sad => -1
@@ -85,3 +87,5 @@ class MoodDetector {
     }
   }
 }
+
+final model = MoodDetector();

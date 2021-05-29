@@ -61,11 +61,15 @@ class Journal extends StatefulWidget {
 class _JournalState extends State<Journal> {
   @override
   Widget build(BuildContext context) {
+    var icon;
+    if (widget.mood == 1) icon = '😃';
+    if (widget.mood == 0) icon = '😐';
+    if (widget.mood == -1) icon = '🙁';
     return Card(
       child: ListTile(
         title: Text(Jiffy(widget.date).format('MMM d, yyyy')),
         subtitle: Text(widget.text),
-        trailing: Icon(Icons.emoji_emotions),
+        trailing: Text(icon),
         onTap: () {
           Navigator.pushNamed(
             context,
