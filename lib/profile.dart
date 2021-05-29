@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'auth/auth.dart';
 
 class Profile extends StatelessWidget {
   static const String id = "/profile";
   @override
   Widget build(BuildContext context) {
+    final name = currentUser.userName;
+    final emailID = currentUser.email;
     final logo = Hero(
       tag: 'logo',
       child: CircleAvatar(
-        backgroundImage: AssetImage(
-          'assets/images/profile.jpeg',
+        backgroundImage: NetworkImage(
+          (picture ?? ''),
         ),
         radius: 64,
       ),
@@ -18,14 +21,14 @@ class Profile extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(
-          "Annmarie\nMcQueen",
+          name.split(' ').join('\n'),
           style: Theme.of(context).textTheme.overline!.copyWith(
                 fontSize: 32,
                 fontWeight: FontWeight.w600,
               ),
         ),
         Text(
-          "annmariemcqueen@email.com",
+          emailID.toString(),
           style: Theme.of(context).textTheme.overline!.copyWith(
                 fontSize: 12,
               ),
@@ -46,7 +49,7 @@ class Profile extends StatelessWidget {
         children: [
           Positioned(
             child: Text(
-              "100",
+              currentUser.coins.toString(),
               style:
                   Theme.of(context).textTheme.bodyText2!.copyWith(fontSize: 80),
             ),
@@ -76,7 +79,7 @@ class Profile extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("A few handy buttons here"),
+        title: Text("Profile"),
       ),
       body: Center(
         child: Padding(

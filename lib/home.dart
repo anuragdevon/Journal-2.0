@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:journal/auth/auth.dart';
 import 'package:journal/journal.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:path/path.dart' as path;
@@ -8,28 +9,27 @@ import 'package:jiffy/jiffy.dart';
 import 'journal.dart';
 import 'main.dart';
 import 'profile.dart';
+import 'shop.dart';
 
 class Sidebar extends StatelessWidget {
-  static const List<String> _options = ['Profile', 'Shop', 'Settings'];
-
   @override
   Widget build(BuildContext context) {
     return Drawer(
       child: ListView(
         children: <Widget>[
           Container(child: DrawerHeader(child: Text(MyApp.name))),
-          ...buildOptions(),
+          ListTile(
+            title: Text('Profile'),
+            onTap: () {
+              Navigator.pushNamed(context, Profile.id);
+            },
+          ),
+          ListTile(
+              title: Text('Shop'),
+              onTap: () {
+                Navigator.pushNamed(context, Shop.id);
+              })
         ],
-      ),
-    );
-  }
-
-  List<Widget> buildOptions() {
-    return List<Widget>.generate(
-      _options.length,
-      (index) => ListTile(
-        title: Text(_options[index]),
-        onTap: () {},
       ),
     );
   }
@@ -59,14 +59,13 @@ class _JournalState extends State<Journal> {
         title: Text(Jiffy(widget.date).format('MMM d, yyyy')),
         subtitle: Text(widget.text),
         trailing: Icon(Icons.emoji_emotions),
-        onTap: () async {
-          await Navigator.pushNamed(
+        onTap: () {
+          Navigator.pushNamed(
             context,
             JournalInput.id,
             arguments: JournalInputArguments(
                 date: this.widget.date, text: this.widget.text),
           );
-          setState(() {});
         },
       ),
     );
@@ -136,14 +135,14 @@ class _HomeState extends State<Home> {
     super.dispose();
   }
 
-  searchBarAction(String avatar) {
+  searchBarAction() {
     if (selectedTerm == null)
       return [
         FloatingSearchBarAction(
           showIfOpened: false,
           child: CircularButton(
             icon: CircleAvatar(
-              backgroundImage: NetworkImage(avatar),
+              backgroundImage: NetworkImage(picture ?? ''),
             ),
             onPressed: () {
               Navigator.pushNamed(context, Profile.id);
@@ -176,7 +175,6 @@ class _HomeState extends State<Home> {
 
   Widget buildFloatingSearchBar() {
     final isPortrait = true;
-    final avatar = 'https://via.placeholder.com/150x150';
 
     return FloatingSearchBar(
       controller: controller,
@@ -208,7 +206,7 @@ class _HomeState extends State<Home> {
       // Specify a custom transition to be used for
       // animating between opened and closed stated.
       transition: CircularFloatingSearchBarTransition(),
-      actions: searchBarAction(avatar),
+      actions: searchBarAction(),
       builder: searchBarBodyBuilder,
     );
   }

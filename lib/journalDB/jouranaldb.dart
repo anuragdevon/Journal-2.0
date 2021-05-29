@@ -14,9 +14,6 @@ class UserData {
       coins = snapshot.value.child('wallet');
 
   void updateCoins() => dbRef.child(email).update({'wallet': coins});
-
-  void delete() => dbRef.child(email).remove();
-
   UserData({required this.userName, required this.email}) {
     dbRef.child(userName).once().then((DataSnapshot snapshot) {
       if (snapshot.value == null) {

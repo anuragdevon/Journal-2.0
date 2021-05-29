@@ -4,6 +4,7 @@ import 'home.dart';
 import 'journal.dart';
 import 'profile.dart';
 import 'auth/login.dart';
+import 'shop.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -21,6 +22,8 @@ class RouteGenerator {
                 ));
       case Profile.id:
         return MaterialPageRoute(builder: (context) => Profile());
+      case Shop.id:
+        return MaterialPageRoute(builder: (context) => Shop());
       default:
         return _errorRoute();
     }

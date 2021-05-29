@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:journal/home.dart';
+import 'package:journal/journalDB/jouranaldb.dart';
 import './login.dart';
-import './profile.dart';
+//import './profile.dart';
 
 final FlutterAppAuth appAuth = FlutterAppAuth(); // 1
 final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
@@ -12,6 +14,7 @@ final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
 late String? name;
 late String? picture;
 late String? email;
+late final UserData currentUser;
 // username = name;
 // email = emailID;
 
@@ -45,7 +48,7 @@ class _MyAppState extends State<JournalApp> {
         child: isBusy
             ? CircularProgressIndicator()
             : isLoggedIn
-                ? Profile(logoutAction, name, picture, email)
+                ? Home()
                 : Login(loginAction, errorMessage),
       ),
     );
@@ -109,6 +112,8 @@ class _MyAppState extends State<JournalApp> {
             email = profile['email'];
           });
           // JournalDataState.syncUserData();
+          currentUser =
+              UserData(userName: name.toString(), email: email.toString());
         }
       }
     } catch (e, _) {
