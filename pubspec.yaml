@@ -24,10 +24,20 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
+
+  # Firebase Databse
+  firebase_core: ^1.2.0
+  firebase_database: ^7.0.0
+
   intl: ^0.17.0
   jiffy: ^4.1.0
   material_floating_search_bar: ^0.3.4
   path_provider: ^2.0.2
+
+  # Authentication
+  http: ^0.13.3
+  flutter_appauth: ^1.0.0
+  flutter_secure_storage: ^4.2.0
 
 dev_dependencies:
   flutter_test:

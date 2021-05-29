@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'routing.dart';
 import 'home.dart';
+import 'auth/login.dart';
 
 void main() => runApp(MyApp());
 
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: Home.id,
+      initialRoute: Login.id,
       onGenerateRoute: RouteGenerator.generateRoute,
     );
   }
