@@ -2,7 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:journal/journal.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
-import 'package:path/path.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 import 'package:jiffy/jiffy.dart';
 import 'journal.dart';
 import 'main.dart';
@@ -41,7 +42,7 @@ class Journal extends StatefulWidget {
   Journal({Key? key, required this.date, required this.text}) : super(key: key);
 
   static Future<Journal> load(File journal) async {
-    final String fileName = basename(journal.path).split('.').first;
+    final String fileName = path.basename(journal.path).split('.').first;
     final DateTime date = DateTime.parse(fileName);
     return Journal(date: date, text: await journal.readAsString());
   }
@@ -135,7 +136,7 @@ class _HomeState extends State<Home> {
     super.dispose();
   }
 
-  searchBarAction(BuildContext context, String avatar) {
+  searchBarAction(String avatar) {
     if (selectedTerm == null)
       return [
         FloatingSearchBarAction(
@@ -173,7 +174,7 @@ class _HomeState extends State<Home> {
     return null;
   }
 
-  Widget buildFloatingSearchBar(BuildContext context) {
+  Widget buildFloatingSearchBar() {
     final isPortrait = true;
     final avatar = 'https://via.placeholder.com/150x150';
 
@@ -207,7 +208,7 @@ class _HomeState extends State<Home> {
       // Specify a custom transition to be used for
       // animating between opened and closed stated.
       transition: CircularFloatingSearchBarTransition(),
-      actions: searchBarAction(context, avatar),
+      actions: searchBarAction(avatar),
       builder: searchBarBodyBuilder,
     );
   }
@@ -281,15 +282,29 @@ class _HomeState extends State<Home> {
     );
   }
 
+  Future<bool> loadTodaysJournalText() async {
+    String contents = '';
+    final String journalID = Jiffy(DateTime.now()).format('yyyyMMdd');
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+    try {
+      final file = File('$path/$journalID.txt');
+      contents = await file.readAsString();
+    } catch (e) {}
+    final _ = await Navigator.pushNamed(
+      context,
+      JournalInput.id,
+      arguments: JournalInputArguments(text: contents),
+    );
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: buildFloatingSearchBar(context),
+      body: buildFloatingSearchBar(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, JournalInput.id,
-              arguments: JournalInputArguments());
-        },
+        onPressed: loadTodaysJournalText,
         child: const Icon(Icons.add),
       ),
       drawer: Sidebar(),

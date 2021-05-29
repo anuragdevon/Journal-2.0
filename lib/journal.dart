@@ -3,7 +3,6 @@ import 'package:jiffy/jiffy.dart';
 import 'package:journal/main.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-
 import 'home.dart';
 
 class JournalInput extends StatefulWidget {
@@ -27,9 +26,7 @@ class _JournalInputState extends State<JournalInput> {
     // TODO: handle list updation on pop
     final String journalId = Jiffy(widget.date).format('yyyyMMdd');
 
-    final Directory directory = Platform.isLinux
-        ? Directory('/home/subaru/.cache/journals')
-        : await getApplicationDocumentsDirectory();
+    final Directory directory = await getApplicationDocumentsDirectory();
     final path = directory.path;
     final file = File('$path/$journalId.txt');
     file.writeAsString('$journalText');

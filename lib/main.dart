@@ -12,14 +12,12 @@ class MyApp extends StatelessWidget {
   static final journalsLoaded = loadJournals();
 
   static Future<bool> loadJournals() async {
-    final Directory dataDir = Platform.isLinux
-        ? Directory('/home/subaru/.cache/journals')
-        : await getApplicationDocumentsDirectory();
+    final Directory dataDir = await getApplicationDocumentsDirectory();
     await for (FileSystemEntity journal in dataDir.list(
       recursive: false,
       followLinks: false,
     )) {
-      if (journal is File) {
+      if (journal is File && journal.path.endsWith('.txt')) {
         journals.add(await Journal.load(journal));
       }
     }
