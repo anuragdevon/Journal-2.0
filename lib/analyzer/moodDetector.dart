@@ -67,22 +67,17 @@ class MoodDetector {
     List<List<double>> input = tokenizeInputText(_text);
     var output = List<double>.filled(2, 0).reshape([1, 2]);
     journalAnalyzer.run(input, output);
-    //return [output[0][0], output[0][1]];
-    // final positive = output[0][0];
-    // final negative = output[0][1];
     final positive = num.parse(output[0][0].toStringAsFixed(2));
     final negative = num.parse(output[0][1].toStringAsFixed(2));
     print(positive);
     print(negative);
     // happy=> 1, neutal => 0, sad => -1
     if (positive > negative) {
-      currentUser.coins += positive * 10;
+      //double num1 = double.parse((12.3412).toStringAsFixed(2));
+      currentUser.coins += double.parse((positive * 3.14).toStringAsFixed(2));
       return 1;
-    } else if (positive > 0.45 && positive < 0.55) {
-      currentUser.coins += positive * 10;
-      return 0;
     } else {
-      currentUser.coins -= negative * 10;
+      currentUser.coins -= double.parse((negative * 3.14).toStringAsFixed(2));
       return -1;
     }
   }

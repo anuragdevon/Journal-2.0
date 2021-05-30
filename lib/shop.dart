@@ -92,7 +92,7 @@ class Shop extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: Text(
-              "JQuery Shoes",
+              "Nike Shoes",
               style: TextStyle(
                 fontSize: 20,
                 color: Colors.black54,
@@ -103,7 +103,7 @@ class Shop extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 4),
             child: Text(
-              "15000 ç",
+              "3500 ç",
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.black45,

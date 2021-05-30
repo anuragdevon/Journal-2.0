@@ -17,15 +17,19 @@ class Sidebar extends StatelessWidget {
     return Drawer(
       child: ListView(
         children: <Widget>[
-          Container(child: DrawerHeader(child: Text(MyApp.name))),
+          Container(
+              child: DrawerHeader(
+                  child: Text(MyApp.name,
+                      style: Theme.of(context).textTheme.headline3))),
           ListTile(
-            title: Text('Profile'),
+            title:
+                Text('Profile', style: Theme.of(context).textTheme.headline5),
             onTap: () {
               Navigator.pushNamed(context, Profile.id);
             },
           ),
           ListTile(
-              title: Text('Shop'),
+              title: Text('Shop', style: Theme.of(context).textTheme.headline5),
               onTap: () {
                 Navigator.pushNamed(context, Shop.id);
               })
@@ -61,10 +65,7 @@ class Journal extends StatefulWidget {
 class _JournalState extends State<Journal> {
   @override
   Widget build(BuildContext context) {
-    var icon;
-    if (widget.mood == 1) icon = '😃';
-    if (widget.mood == 0) icon = '😐';
-    if (widget.mood == -1) icon = '🙁';
+    String icon = (widget.mood == 1) ? '😢' : '😃';
     return Card(
       child: ListTile(
         title: Text(Jiffy(widget.date).format('MMM d, yyyy')),
@@ -331,17 +332,48 @@ class JournalList extends StatefulWidget {
 }
 
 class _JournalListState extends State<JournalList> {
+  Future<bool> _future = MyApp.loadJournals();
+  void refreshList() {
+    // reload
+    setState(() {
+      _future = MyApp.loadJournals();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    print('tif');
-    return FutureBuilder(
-      future: MyApp.journalsLoaded,
-      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-        if (snapshot.hasData) {
-          return journalList(MyApp.journals);
-        }
-        return ListTile(title: Text('Loading'));
-      },
+    return Stack(
+      children: [
+        FutureBuilder(
+          future: _future,
+          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            if (snapshot.hasData) {
+              return journalList(MyApp.journals);
+            }
+            return Container(
+              child: Column(
+                children: [
+                  Text("Loading", style: Theme.of(context).textTheme.headline5)
+                ],
+              ),
+            );
+          },
+        ),
+        Positioned(
+          bottom: 80,
+          right: 24,
+          child: IconButton(
+            icon: Icon(
+              Icons.refresh_outlined,
+              size: 32,
+            ),
+            onPressed: () {
+              refreshList();
+            },
+            tooltip: "Reload Journals",
+          ),
+        ),
+      ],
     );
   }
 

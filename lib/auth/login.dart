@@ -12,13 +12,12 @@ class Login extends StatelessWidget {
     return Scaffold(
       backgroundColor: Color.fromRGBO(3, 9, 23, 1),
       body: Container(
-        padding: EdgeInsets.all(85),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              "Journal App",
+              "Positively",
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 40,

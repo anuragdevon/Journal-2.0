@@ -9,11 +9,12 @@ import 'auth/login.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  static const name = 'Journals';
+  static const name = 'Positively';
   static final List<Journal> journals = [];
   static final journalsLoaded = loadJournals();
 
   static Future<bool> loadJournals() async {
+    journals.clear();
     final Directory dataDir = await getApplicationDocumentsDirectory();
     await for (FileSystemEntity journal in dataDir.list(
       recursive: false,
